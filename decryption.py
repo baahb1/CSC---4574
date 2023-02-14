@@ -1,15 +1,46 @@
 def main():
     print("f")
     x =[3,0,1,1]
+    #do not stumble over something behind you
+    caesarT= "IT STY XYZRGQJ TAJW XTRJYMNSL GJMNSI DTZ"
+    #print(decryption_ceaser(caesarT,2))
+
+
     #print(lookup_table(x))
 
-    print(find_frequencies("hellow fed",show_as_actual=True))
+    #print(find_frequencies("hellow fed",show_as_actual=True))
 
 
 
-def decryption_ceaser(cypher_text):
-    print("dc")
 
+
+def decryption_ceaser(cypher_text , key):
+    plain_text = ""
+    if type(key) == str and len(key) == 1:
+
+        for i in cypher_text:
+            key = lookup_table(key)
+            if i.isalpha():
+                plain_text += (lookup_table(lookup_table(i) - key))
+            else:
+                plain_text += i
+        return plain_text
+    elif type(key) == int:
+
+        for i in cypher_text:
+            if i.isalpha():
+                plain_text += (lookup_table(lookup_table(i) +key))
+            else:
+                plain_text += i
+        return plain_text
+
+
+        return cypher_text
+
+    elif type(key) == list:
+        return cypher_text
+
+    
 
 
 
@@ -63,7 +94,7 @@ def lookup_table(x):
         'g':6,
         'h':7,
         'i':8,
-        'j':90,
+        'j':9,
         'k':10,
         'l':11,
         'm':12,
@@ -122,6 +153,8 @@ def lookup_table(x):
 
 
     elif type(x) == int:
+        if x < 0:
+            y = 26 - y
         y = x % 26  
         y = int_to_string[y]
         return y
