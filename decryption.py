@@ -3,24 +3,55 @@ def main():
     x =[3,0,1,1]
     #do not stumble over something behind you
     caesarT= "IT STY XYZRGQJ TAJW XTRJYMNSL GJMNSI DTZ"
+    brokenCaesar, caesarKey = break_ceaser(caesarT)
+    
+    print("ceasar plaintext : ",brokenCaesar)
+    print("Key :",caesarKey)
+    
     #print(decryption_ceaser(caesarT,2))
-
-
     #print(lookup_table(x))
-
     #print(find_frequencies("hellow fed",show_as_actual=True))
 
 
+def break_ceaser(cypher_text):
+    Broken = ""
+    freq_chart = find_frequencies(cypher_text,show_as_actual= True)
+    maxf = max(freq_chart)
+    while Broken.lower() != "y":
+        if max(freq_chart) == 0:
+            raise Exception("was unable to find a solution")
+            return 0,0
+
+        for i in range(len(freq_chart)):
+
+            if freq_chart[i] == maxf:
+
+                current_iteration = decryption_ceaser(cypher_text,lookup_table(freq_chart[i]))
+                print("plain text: ",current_iteration)
+                freq_chart[i] = 0
+                maxf = max(freq_chart)
+                Broken = input("Does this look like a real sentence?")
+                if Broken == "y":
+                    break
+                
+
+    return current_iteration , freq_chart[i]
+    
+        
 
 
 
 def decryption_ceaser(cypher_text , key):
+    #print("cypher_text: ",cypher_text)
+    #print("type key",type(key))
+    #print("key ",key)
     plain_text = ""
     if type(key) == str and len(key) == 1:
-
+        key = lookup_table(key)
         for i in cypher_text:
-            key = lookup_table(key)
+            
             if i.isalpha():
+                lookup = lookup_table(i) - key
                 plain_text += (lookup_table(lookup_table(i) - key))
             else:
                 plain_text += i
@@ -29,7 +60,7 @@ def decryption_ceaser(cypher_text , key):
 
         for i in cypher_text:
             if i.isalpha():
-                plain_text += (lookup_table(lookup_table(i) +key))
+                plain_text += (lookup_table(lookup_table(i) - key))
             else:
                 plain_text += i
         return plain_text
@@ -154,7 +185,7 @@ def lookup_table(x):
 
     elif type(x) == int:
         if x < 0:
-            y = 26 - y
+            y = 26 - x
         y = x % 26  
         y = int_to_string[y]
         return y
