@@ -3,7 +3,7 @@ def main():
     x =[3,0,1,1]
     #print(lookup_table(x))
 
-    print(find_frequencies("hellow"))
+    print(find_frequencies("hellow fed",show_as_actual=True))
 
 
 
@@ -17,15 +17,20 @@ def decryption_ceaser(cypher_text):
 #creates a frequency distribution and returns it in a list of size 26 (0 - 25)
 #if show_as_actual is sent as true, the list just contains how many times each element in s shows up
 def find_frequencies(s,show_as_actual = False):
+    spaces = 0
     histogram = []
     for i in range(26):
         histogram.append(0)
     
     for i in s:
-        histogram[lookup_table(i)] += 1
+        if i.isalpha():
+            histogram[lookup_table(i)] += 1
+        else:
+            spaces += 1
+
     
     if show_as_actual == False:
-        total_size = (len(s))
+        total_size = (len(s)) - spaces
         for i in range(len(histogram)):
             histogram[i] = histogram[i] / total_size
         return histogram
@@ -134,7 +139,8 @@ def lookup_table(x):
             return_list = []
 
             for i in range(len(x)):
-                return_list.append(string_to_int[x[i]])
+
+                return_list.append(string_to_int[x[i].lower()])
             
             return return_list
 
