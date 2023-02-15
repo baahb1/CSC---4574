@@ -1,16 +1,110 @@
 def main():
-    print("f")
-    x =[3,0,1,1]
     #do not stumble over something behind you
     caesarT= "IT STY XYZRGQJ TAJW XTRJYMNSL GJMNSI DTZ"
-    brokenCaesar, caesarKey = break_ceaser(caesarT)
+    vigenereT = "UPRCW IHSGY OXQJR IMXTW AXVEB DREGJ AFNIS EECAG SSBZR TVEZU RJCXT OGPCY OOACS EDBGF ZIFUB KVMZU FXCAD CAXGS FVNKM SGOCG FIOWN KSXTS ZNVIZ HUVME DSEZU LFMBL PIXWR MSPUS FJCCA IRMSR FINCZ CXSNI BXAHE LGXZC BESFG HLFIV ESYWO RPGBD SXUAR JUSAR GYWRS GSRZP MDNIH WAPRK HIDHU ZBKEQ NETEX ZGFUI FVRI"
+
+    #brokenCaesar, caesarKey = break_ceaser(caesarT)
     
-    print("ceasar plaintext : ",brokenCaesar)
-    print("Key :",caesarKey)
+    #print("ceasar plaintext : ",brokenCaesar)
+    #print("Key :",caesarKey)
+    print("our period is : ",findPeriod(vigenereT))
+
+    slice_arr = [find_slices(vigenereT,6,1),find_slices(vigenereT,6,2),find_slices(vigenereT,6,3),find_slices(vigenereT,6,4),find_slices(vigenereT,6,5),find_slices(vigenereT,6,6)]
+    for i in range(len(slice_arr)):
+        print("slice ", i," : ", slice_arr[i])
+
+    for i in range(len(slice_arr)):
+        print("frq : ",find_frequencies(slice_arr[i]))
     
-    #print(decryption_ceaser(caesarT,2))
-    #print(lookup_table(x))
-    #print(find_frequencies("hellow fed",show_as_actual=True))
+
+    slice_decrypted = []
+    for i in range(len(slice_arr)):
+        slice_decrypted.append(Not_brute_force(slice_arr[i]))
+        print("unencrpyted ",i, " ", Not_brute_force(slice_arr[i]))
+    
+    print(glue(slice_decrypted))
+
+    
+    #print("slice freq" , find_frequencies())
+
+    #print("slice 1 decoded :" , Not_brute_force(find_slices(vigenereT,6)))
+
+    
+
+def glue(arr):
+    plain_text = ""
+    period = range(len(arr))
+    size = 0
+    for i in arr:
+        size += len(i)
+
+    counter = 0
+    try:
+        while len(plain_text) < size:
+            plain_text+=arr[counter][0]
+            arr[counter] = arr[counter][1:]
+            counter +=1
+            if counter == 6:
+                counter = 0
+
+        return plain_text
+    except:
+        print("Fuck Off Yoshi you can't even begin to understand my code")
+        print(plain_text)
+        return
+
+
+
+
+
+
+
+
+def Not_brute_force(cypher_text):
+    freq = find_frequencies(cypher_text,show_as_actual=True)
+    maxf = max(freq)
+    for i in range(len(freq)):
+
+        if freq[i] == maxf:
+            current_iteration = decryption_ceaser(cypher_text,i - 5)
+    return current_iteration
+
+
+
+
+
+def find_slices(cypher_text,period,slice):
+    new_string = ""
+    counter = 0
+    for i in cypher_text:
+        if i.isalpha():
+            if counter == period:
+                counter = 0
+            if counter == slice-1:
+                new_string += i
+            counter +=1
+            
+    return new_string
+
+
+def findPeriod(cypher_text):
+    freq = find_frequencies(cypher_text,show_as_actual=True)
+    summation = 0
+    for i in freq:
+        summation += i*(i-1)
+    
+    length = 0
+    for i in cypher_text:
+        if i.isalpha():
+            length+=1
+    
+
+    summation  = summation* (1/(length*(length-1)))
+
+    return summation
+
+
+
 
 
 def break_ceaser(cypher_text):
@@ -18,24 +112,22 @@ def break_ceaser(cypher_text):
     freq_chart = find_frequencies(cypher_text,show_as_actual= True)
     maxf = max(freq_chart)
     while Broken.lower() != "y":
+        maxf = max(freq_chart)
         if max(freq_chart) == 0:
             raise Exception("was unable to find a solution")
             return 0,0
 
         for i in range(len(freq_chart)):
 
-            if freq_chart[i] == maxf:
-
-                current_iteration = decryption_ceaser(cypher_text,lookup_table(freq_chart[i]))
+            if freq_chart[i] == maxf and Broken != "y":
+                print(freq_chart)
+                current_iteration = decryption_ceaser(cypher_text,i - 5)
                 print("plain text: ",current_iteration)
                 freq_chart[i] = 0
-                maxf = max(freq_chart)
                 Broken = input("Does this look like a real sentence?")
                 if Broken == "y":
-                    break
-                
-
-    return current_iteration , freq_chart[i]
+                    return current_iteration , i - 5
+    
     
         
 
@@ -52,7 +144,7 @@ def decryption_ceaser(cypher_text , key):
             
             if i.isalpha():
                 lookup = lookup_table(i) - key
-                plain_text += (lookup_table(lookup_table(i) - key))
+                plain_text += (lookup_table(lookup_table(i) - key - 1))
             else:
                 plain_text += i
         return plain_text
@@ -60,7 +152,7 @@ def decryption_ceaser(cypher_text , key):
 
         for i in cypher_text:
             if i.isalpha():
-                plain_text += (lookup_table(lookup_table(i) - key))
+                plain_text += (lookup_table(lookup_table(i) - key - 1))
             else:
                 plain_text += i
         return plain_text
