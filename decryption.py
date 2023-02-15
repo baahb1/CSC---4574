@@ -21,8 +21,28 @@ def main():
     for i in range(len(slice_arr)):
         slice_decrypted.append(Not_brute_force(slice_arr[i]))
         print("unencrpyted ",i, " ", Not_brute_force(slice_arr[i]))
+
+
+    print(find_frequencies(slice_decrypted[0],show_as_actual=True))
+
+    #likely correct..146 freq on e
+    print(find_frequencies(slice_decrypted[1],show_as_actual=True))
+    #also highest on e
+    print(find_frequencies(slice_decrypted[2],show_as_actual=True))
+
+    #high on e and on g
+    print(find_frequencies(slice_decrypted[3],show_as_actual=True))
     
-    print(glue(slice_decrypted))
+    #highest on e by a lot
+    print(find_frequencies(slice_decrypted[4],show_as_actual=True))
+
+    #high on e, l , and p
+    print(find_frequencies(slice_decrypted[5],show_as_actual=True))
+    #slice_decrypted[0] = manual_shifts(slice_arr[0],12)
+
+    
+    print("full decode" , glue(slice_decrypted))
+    #print(glue(slice_decrypted))
 
     
     #print("slice freq" , find_frequencies())
@@ -56,8 +76,8 @@ def glue(arr):
 
 
 
-
-
+#tbeyip getuae pveeye sinthl apeasq zraeel doncez alephl ygefoe satlof nanyel cntblp egoght ygstohcontszehagyzfapcrpniageesemjhpythrylcervgseyohbpwieiewtesfojzueieyeuayljweaeneztrhseyooaemftybucdelsayosozeetmefgzzdtuiyrsfnlwlpaetdzbegtpcthvnrdcaaflwltbgpehee
+#ibeyip vetuae eveeye hinthl ppeasq oraeel soncez plephl ngefoe hatlof canyel rntblp tgoght ngstohrontszthagyzuapcrpciageehemjhpnthrylrervgstyohbplieiewiesfojoueieytuayljleaeneotrhsenooaemutybucselsaydsozeeimefgzodtuiygsfnlwapaetdobegtprthvnrscaafllltbgpthee
 
 
 def Not_brute_force(cypher_text):
@@ -69,7 +89,12 @@ def Not_brute_force(cypher_text):
             current_iteration = decryption_ceaser(cypher_text,i - 5)
     return current_iteration
 
-
+def manual_shifts(cypher_texts,key):
+    plain = ""
+    for i in cypher_texts:
+        if i.isalpha():
+            plain += lookup_table(lookup_table(i) - key)
+    return plain
 
 
 
