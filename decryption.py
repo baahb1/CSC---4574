@@ -1,32 +1,46 @@
+import time
 def main():
     #do not stumble over something behind you
     caesarT= "IT STY XYZRGQJ TAJW XTRJYMNSL GJMNSI DTZ"
     vigenereT = "UPRCW IHSGY OXQJR IMXTW AXVEB DREGJ AFNIS EECAG SSBZR TVEZU RJCXT OGPCY OOACS EDBGF ZIFUB KVMZU FXCAD CAXGS FVNKM SGOCG FIOWN KSXTS ZNVIZ HUVME DSEZU LFMBL PIXWR MSPUS FJCCA IRMSR FINCZ CXSNI BXAHE LGXZC BESFG HLFIV ESYWO RPGBD SXUAR JUSAR GYWRS GSRZP MDNIH WAPRK HIDHU ZBKEQ NETEX ZGFUI FVRI"
 
-    #brokenCaesar, caesarKey = break_ceaser(caesarT)
+    #tests the keys where the most frequent character is assumed to be e
+    #repeates until user finds the broken cypher
+    brokenCaesar, caesarKey = break_ceaser(caesarT)
     
-    #print("ceasar plaintext : ",brokenCaesar)
-    #print("Key :",caesarKey)
+    print("ceasar plaintext : ",brokenCaesar)
+    print("Key :",caesarKey)
+
+    print("-------------------------------------------------------------------")
     print("our period is : ",findPeriod(vigenereT))
+    print("for our vigenere cypher")
+    print("lets check out our slices")
+    time.sleep(2)
 
     slice_arr = [find_slices(vigenereT,6,1),find_slices(vigenereT,6,2),find_slices(vigenereT,6,3),find_slices(vigenereT,6,4),find_slices(vigenereT,6,5),find_slices(vigenereT,6,6)]
     for i in range(len(slice_arr)):
-        print("slice ", i," : ", slice_arr[i])
+        print("slice ", i + 1," : ", slice_arr[i])
 
-    for i in range(len(slice_arr)):
-        print("frq : ",find_frequencies(slice_arr[i]))
+    time.sleep(2)
+
     
 
     slice_decrypted = []
     for i in range(len(slice_arr)):
         slice_decrypted.append(Not_brute_force(slice_arr[i]))
-        print("unencrpyted ",i, " ", Not_brute_force(slice_arr[i]))
+        print("first attempt unencrypt for alphabet  ",i+1, " ", Not_brute_force(slice_arr[i]))
+    print("clearly not all the alphabets were solved just by guessing the first highest freq is e")
+
+    time.sleep(2)
 
 
+
+    print("lets look at our frequencry tables")
     print(find_frequencies(slice_decrypted[0],show_as_actual=True))
 
     #likely correct..146 freq on e
     print(find_frequencies(slice_decrypted[1],show_as_actual=True))
+
     #also highest on e
     print(find_frequencies(slice_decrypted[2],show_as_actual=True))
 
@@ -38,16 +52,31 @@ def main():
 
     #high on e, l , and p
     print(find_frequencies(slice_decrypted[5],show_as_actual=True))
-    #slice_decrypted[0] = manual_shifts(slice_arr[0],12)
+
+    # try shifting based on cypher text l is e
+    slice_decrypted[5] = manual_shifts(slice_decrypted[5],11)
+
+    #tbeyiege tuat pveeyts
+    #         ^  looks like that
+
+    #try shifting u to h on slice 4 (slice_decrypted[3])
+    slice_decrypted[3] = manual_shifts(slice_decrypted[3],13)
+
+    #tbeliegethatpverytsinghaapensfzrareadonpeoalechaygesotsatyounanleacntoleegothiygsgowcongsoehatyofappreniatetsemwheytheyacerigheyoubewieveltessoyzueveneuallywearntztrustyoonebftyourdelfanosomettmesgozdthinrsfalllpartszbettecthingdcanfawltogeeher
+    #lots of patterns arrive   
+    #bettecthingdcanfawltogeeher
+    #^ clearly better things ******* () together
+    #the extra e in together is in alphabet 1
+    #shift alphabet 1 e to t
+    slice_decrypted[0] = manual_shifts(slice_decrypted[0],11) 
+    #ibelievethateverythinghappensforareasonpeoplechangesothatyoucanlearntoletgothingsgowrongsothatyouappreciatethemwhentheyarerightyoubelieveliessoyoueventuallylearntotrustnoonebutyourselfandsometimesgoodthingsfallapartsobetterthingscanfalltogether
+    #added spaces and newlines for legability
+    #i believe that everything happens for a reason people change so that you can learn to let go things go wrong so that you appreciate 
+    #them when they are right you believe lies so you eventually learn to trust no one but yourself and sometimes good things fall 
+    # apart so better things can fall together
 
     
     print("full decode" , glue(slice_decrypted))
-    #print(glue(slice_decrypted))
-
-    
-    #print("slice freq" , find_frequencies())
-
-    #print("slice 1 decoded :" , Not_brute_force(find_slices(vigenereT,6)))
 
     
 
@@ -145,13 +174,12 @@ def break_ceaser(cypher_text):
         for i in range(len(freq_chart)):
 
             if freq_chart[i] == maxf and Broken != "y":
-                print(freq_chart)
                 current_iteration = decryption_ceaser(cypher_text,i - 5)
                 print("plain text: ",current_iteration)
                 freq_chart[i] = 0
                 Broken = input("Does this look like a real sentence?")
                 if Broken == "y":
-                    return current_iteration , i - 5
+                    return current_iteration , i - 4
     
     
         
